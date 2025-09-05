@@ -1,13 +1,5 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Link } from "react-router-dom";
+import { AppBar, Container, Stack, Toolbar, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 const navLinks = [
   {
     path: "/",
@@ -18,7 +10,13 @@ const navLinks = [
     label: "Giỏ hàng",
   },
 ];
+
 const Header = () => {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("isAuthenticated");
+    navigate("/login", { replace: true });
+  };
   return (
     <AppBar sx={{ position: "fixed" }}>
       <Container>
@@ -49,6 +47,7 @@ const Header = () => {
                 </Typography>
               </Link>
             ))}
+            <Typography onClick={handleLogOut}>Đăng xuất</Typography>
           </Stack>
         </Toolbar>
       </Container>

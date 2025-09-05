@@ -3,28 +3,47 @@ import HomePage from "../pages/HomePage";
 import DefaultLayout from "../layouts/DefaultLayout.index";
 import ProductDetailPage from "../pages/ProductDetailPage";
 import CartPage from "../pages/CartPage";
+import LoginPage from "../pages/LoginPage";
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 
 const paths = [
   {
-    element: <DefaultLayout />,
+    element: <PrivateRoute />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        element: <DefaultLayout />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+          {
+            path: "/product-detail/:id",
+            element: <ProductDetailPage />,
+          },
+          {
+            path: "/cart",
+            element: <CartPage />,
+          },
+          {
+            path: "*",
+            element: <HomePage />,
+          },
+        ],
       },
+    ],
+  },
+
+  {
+    element: <PublicRoute />,
+    children: [
       {
-        path: "/product-detail/:id",
-        element: <ProductDetailPage />,
-      },
-      {
-        path: "/cart",
-        element: <CartPage />,
-      },
-      {
-        path: "*",
-        element: <HomePage />,
+        path: "/login",
+        element: <LoginPage />,
       },
     ],
   },
 ];
+
 export const router = createBrowserRouter(paths);

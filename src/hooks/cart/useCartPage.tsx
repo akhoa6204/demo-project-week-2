@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { removeItemsCart, updateQty } from "../../redux/slice/cart.slice";
 import { useAppDispatch, useAppSelector } from "../useRedux";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,15 @@ const useCartPage = () => {
   const navigate = useNavigate();
   const cart = useAppSelector((state) => state.cart.cart);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const originalTotal = useMemo(() => {
     const items = cart.filter((item) => selectedItems.includes(item.id));
@@ -70,6 +79,7 @@ const useCartPage = () => {
     originalTotal,
     discountTotal,
     finalTotal,
+    isLoading
   };
 };
 export default useCartPage;

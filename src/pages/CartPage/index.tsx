@@ -4,6 +4,7 @@ import useCartPage from "../../hooks/cart/useCartPage";
 import EmptyCart from "./EmptyCart";
 import OrderSummary from "./OrderSummary";
 import BottomCheckoutBar from "./BottomCheckoutBar";
+import CartPageSkeleton from "./Skeleton";
 
 const CartPage = () => {
   const {
@@ -17,7 +18,9 @@ const CartPage = () => {
     originalTotal,
     discountTotal,
     finalTotal,
+    isLoading,
   } = useCartPage();
+  if (isLoading) return <CartPageSkeleton />;
   return (
     <Container sx={{ py: 3 }}>
       {cart.length ? (
