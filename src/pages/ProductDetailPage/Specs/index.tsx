@@ -1,20 +1,27 @@
 import { Stack } from "@mui/material";
-import type { IProduct } from "../../../interface/IProduct";
 import Row from "./Row";
+import { useProductDetailContext } from "../../../hooks/product-detail/useProductDetailContext";
 
-const Specs = ({ product }: { product: IProduct }) => {
-  const { dimensions } = product;
+const Specs = () => {
+  const { product } = useProductDetailContext();
+  const {
+    dimensions,
+    category,
+    brand,
+    stock,
+    weight,
+    shippingInformation,
+    warrantyInformation,
+    returnPolicy,
+  } = product!;
 
   return (
     <Stack spacing={1.5}>
-      <Row label="Danh mục" value={product.category || "—"} />
-      <Row label="Thương hiệu" value={product.brand || "—"} />
+      <Row label="Danh mục" value={category || "—"} />
+      <Row label="Thương hiệu" value={brand || "—"} />
 
-      <Row label="Tồn kho" value={product.stock ?? "—"} />
-      <Row
-        label="Khối lượng"
-        value={product.weight ? `${product.weight} g` : "—"}
-      />
+      <Row label="Tồn kho" value={stock ?? "—"} />
+      <Row label="Khối lượng" value={weight ? `${weight} g` : "—"} />
       <Row
         label="Kích thước"
         value={
@@ -24,9 +31,9 @@ const Specs = ({ product }: { product: IProduct }) => {
         }
       />
 
-      <Row label="Vận chuyển" value={product.shippingInformation || "—"} />
-      <Row label="Bảo hành" value={product.warrantyInformation || "—"} />
-      <Row label="Đổi trả" value={product.returnPolicy || "—"} />
+      <Row label="Vận chuyển" value={shippingInformation || "—"} />
+      <Row label="Bảo hành" value={warrantyInformation || "—"} />
+      <Row label="Đổi trả" value={returnPolicy || "—"} />
     </Stack>
   );
 };

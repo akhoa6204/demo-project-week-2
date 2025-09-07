@@ -6,25 +6,17 @@ import {
   Typography,
 } from "@mui/material";
 import { formatCurrency } from "../../helpers/common";
-import type { CartItem } from "../../interface/ICartItem";
+import { useCartContext } from "../../hooks/cart/useCartContext";
 
-type Props = {
-  selectedItems: number[];
-  originalTotal: number;
-  finalTotal: number;
-  cart: CartItem[];
-  handleRemoveItems: (ids: number[]) => void;
-  handleToggleAllSelectedItems: () => void;
-};
-
-const BottomCheckoutBar: React.FC<Props> = ({
-  selectedItems,
-  originalTotal,
-  finalTotal,
-  cart,
-  handleRemoveItems,
-  handleToggleAllSelectedItems,
-}) => {
+const BottomCheckoutBar = () => {
+  const {
+    selectedItems,
+    cart,
+    handleToggleAllSelectedItems,
+    handleRemoveItems,
+    finalTotal,
+    originalTotal,
+  } = useCartContext();
   return (
     <Stack
       direction="row"

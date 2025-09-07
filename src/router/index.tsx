@@ -6,6 +6,9 @@ import CartPage from "../pages/CartPage";
 import LoginPage from "../pages/LoginPage";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import HomeProvider from "../hooks/home/HomeProvider";
+import ProductDetailProvider from "../hooks/product-detail/ProductDetailProvider";
+import CartProvider from "../hooks/cart/CartProvider";
 
 const paths = [
   {
@@ -16,19 +19,35 @@ const paths = [
         children: [
           {
             path: "/",
-            element: <HomePage />,
+            element: (
+              <HomeProvider>
+                <HomePage />
+              </HomeProvider>
+            ),
           },
           {
             path: "/product-detail/:id",
-            element: <ProductDetailPage />,
+            element: (
+              <ProductDetailProvider>
+                <ProductDetailPage />
+              </ProductDetailProvider>
+            ),
           },
           {
             path: "/cart",
-            element: <CartPage />,
+            element: (
+              <CartProvider>
+                <CartPage />
+              </CartProvider>
+            ),
           },
           {
             path: "*",
-            element: <HomePage />,
+            element: (
+              <HomeProvider>
+                <HomePage />
+              </HomeProvider>
+            ),
           },
         ],
       },

@@ -1,28 +1,75 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { IProduct } from "../../interface/IProduct";
 import type { IStatus } from "../../interface/IStatus";
 import ProductServices from "../../services/ProductServices";
 import { useAppDispatch } from "../useRedux";
-import { addCart } from "../../redux/slice/cart.slice";
+import { addCart } from "../../redux/actions/cart.action";
+type State = {
+  product?: IProduct;
+  status: IStatus;
+  quantity: number;
+  activeImage: number;
+};
+type Action =
+  | { type: "LOAD_START" }
+  | { type: "LOAD_SUCCESS"; payload: { product: IProduct } }
+  | { type: "LOAD_ERROR" }
+  | { type: "SET_IMAGE"; payload: number }
+  | { type: "SET_QUANTITY"; payload: number };
+const initialState: State = {
+  product: undefined,
+  status: "idle",
+  quantity: 1,
+  activeImage: 0,
+};
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "LOAD_START":
+      return {
+        ...state,
+        status: "loading",
+      };
+    case "LOAD_SUCCESS":
+      return {
+        ...state,
+        status: "success",
+        product: action.payload.product,
+      };
+    case "LOAD_ERROR":
+      return {
+        ...state,
+        status: "error",
+      };
+    case "SET_IMAGE":
+      return {
+        ...state,
+        activeImage: action.payload,
+      };
+    case "SET_QUANTITY":
+      return {
+        ...state,
+        quantity: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
 const useProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<IProduct>();
-  const [status, setStatus] = useState<IStatus>("idle");
-  const [quantity, setQuantity] = useState<number>(1);
-  const [activeImage, setActiveImage] = useState<number>(0);
+  const [state, dispatchLocal] = useReducer(reducer, initialState);
   const dispatch = useAppDispatch();
 
   const images = useMemo(
     () =>
-      product?.images?.length
-        ? product.images
-        : product?.thumbnail
-        ? [product.thumbnail]
+      state.product?.images?.length
+        ? state.product.images
+        : state.product?.thumbnail
+        ? [state.product.thumbnail]
         : [],
-    [product]
+    [state.product]
   );
 
   useEffect(() => {
@@ -31,13 +78,15 @@ const useProductDetail = () => {
       return;
     }
     const fetchData = async () => {
-      setStatus("loading");
+      dispatchLocal({ type: "LOAD_START" });
       try {
         const res = await ProductServices.getProduct(id);
-        setProduct(res);
-        setStatus("success");
+        dispatchLocal({
+          type: "LOAD_SUCCESS",
+          payload: { product: res },
+        });
       } catch (err) {
-        setStatus("error");
+        dispatchLocal({ type: "LOAD_ERROR" });
         console.error(err);
       }
     };
@@ -45,36 +94,36 @@ const useProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!state.product) return;
     const item = {
-      id: product.id,
-      product,
-      qty: quantity,
+      id: state.product.id,
+      product: state.product,
+      qty: state.quantity,
     };
     dispatch(addCart(item));
   };
 
   const handleChangeQuantity = (id: number, newQty: number) => {
-    if (!product) return;
+    if (!state.product) return;
     if (newQty <= 1) return;
-    if (newQty > product.stock) return;
-    setQuantity(newQty);
+    if (newQty > state.product.stock) return;
+    dispatchLocal({ type: "SET_QUANTITY", payload: newQty });
   };
 
   const handleChooseImage = (i: number) => {
     if (i < 0 || i >= images.length) return;
-    setActiveImage(i);
+    dispatchLocal({ type: "SET_IMAGE", payload: i });
   };
 
   return {
     id,
-    status,
-    product,
+    status: state.status,
+    product: state.product,
     images,
-    quantity,
+    quantity: state.quantity,
     handleChangeQuantity,
     handleChooseImage,
-    activeImage,
+    activeImage: state.activeImage,
     handleAddToCart,
   };
 };

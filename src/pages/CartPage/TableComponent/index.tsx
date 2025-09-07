@@ -10,23 +10,16 @@ import {
 import Row from "./Row";
 import type { CartItem } from "../../../interface/ICartItem";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useCartContext } from "../../../hooks/cart/useCartContext";
 
 const heads = ["tên sản phẩm", "giá", "số lượng"];
-const TableComponent = ({
-  cart,
-  handleChangeQuantity,
-  handleRemoveItems,
-  handleToggleSelectedItems,
-  handleToggleAllSelectedItems,
-  selectedItems,
-}: {
-  cart: CartItem[];
-  handleChangeQuantity: (id: number, qty: number) => void;
-  handleRemoveItems: (ids: number[]) => void;
-  handleToggleSelectedItems: (id: number) => void;
-  handleToggleAllSelectedItems: () => void;
-  selectedItems: number[];
-}) => {
+const TableComponent = () => {
+  const {
+    selectedItems,
+    cart,
+    handleToggleAllSelectedItems,
+    handleRemoveItems,
+  } = useCartContext();
   return (
     <Table>
       <TableHead sx={{ bgcolor: "#f3f2f2ff" }}>
@@ -69,14 +62,7 @@ const TableComponent = ({
       </TableHead>
       <TableBody>
         {cart.map((item: CartItem) => (
-          <Row
-            key={item.id}
-            handleChangeQuantity={handleChangeQuantity}
-            handleToggleSelectedItems={handleToggleSelectedItems}
-            selectedItems={selectedItems}
-            handleRemoveItems={handleRemoveItems}
-            {...item}
-          />
+          <Row key={item.id} {...item} />
         ))}
       </TableBody>
     </Table>

@@ -1,18 +1,14 @@
 import { Button, Stack, Typography } from "@mui/material";
-interface Props {
-  currentPage: number;
-  handlePreviousPage: () => void;
-  handleNextPage: () => void;
-  canGoPrevious: boolean;
-  canGoNext: boolean;
-}
-const Pagination: React.FC<Props> = ({
-  currentPage,
-  handlePreviousPage,
-  handleNextPage,
-  canGoPrevious,
-  canGoNext,
-}) => {
+import useHomeContext from "../../hooks/home/useHomeContext";
+
+const Pagination = () => {
+  const {
+    currentPage,
+    handleNextPage,
+    handlePreviousPage,
+    canGoPrevious,
+    canGoNext,
+  } = useHomeContext();
   return (
     <Stack
       direction="row"

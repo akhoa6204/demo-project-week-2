@@ -1,45 +1,21 @@
 import { Box, Grid, Rating, Stack, Typography } from "@mui/material";
 import Gallery from "./Gallery";
 import InfoPanel from "./InfoPanel";
-import type { IProduct } from "../../interface/IProduct";
 import Specs from "./Specs";
 import Reviews from "./Reviews";
+import { useProductDetailContext } from "../../hooks/product-detail/useProductDetailContext";
 
-const MainContent = ({
-  images,
-  product,
-  quantity = 1,
-  handleChangeQuantity,
-  handleChooseImage,
-  activeImage,
-  handleAddToCart,
-}: {
-  images: string[];
-  product: IProduct;
-  quantity: number;
-  handleChangeQuantity: (id: number, newQty: number) => void;
-  handleChooseImage: (i: number) => void;
-  activeImage: number;
-  handleAddToCart: () => void;
-}) => {
+const MainContent = () => {
+  const { product } = useProductDetailContext();
+  const { description, rating } = product!;
   return (
     <Grid container spacing={4}>
       <Grid size={{ xs: 12, md: 5 }}>
-        <Gallery
-          images={images}
-          title={product!.title}
-          active={activeImage}
-          handleChooseImage={handleChooseImage}
-        />
+        <Gallery />
       </Grid>
 
       <Grid size={{ xs: 12, md: 7 }}>
-        <InfoPanel
-          product={product!}
-          quantity={quantity}
-          handleChangeQuantity={handleChangeQuantity}
-          handleAddToCart={handleAddToCart}
-        />
+        <InfoPanel />
       </Grid>
 
       <Grid size={12} mt={1}>
@@ -54,7 +30,7 @@ const MainContent = ({
           <Typography variant="h5">Thông số kỹ thuật</Typography>
         </Box>
         <Box px={2}>
-          <Specs product={product!} />
+          <Specs />
         </Box>
       </Grid>
 
@@ -70,7 +46,7 @@ const MainContent = ({
           <Typography variant="h5">Mô tả sản phẩm</Typography>
         </Box>
         <Box px={2}>
-          <Typography variant="body1">{product!.description}</Typography>
+          <Typography variant="body1">{description}</Typography>
         </Box>
       </Grid>
 
@@ -111,14 +87,14 @@ const MainContent = ({
                   textAlign: "center",
                 }}
               >
-                {product.rating.toFixed(1)} trên 5
+                {rating.toFixed(1)} trên 5
               </Typography>
-              <Rating value={product.rating} precision={0.1} readOnly />
+              <Rating value={rating} precision={0.1} readOnly />
             </Stack>
           </Grid>
         </Grid>
         <Box px={2}>
-          <Reviews reviews={product!.reviews || []} />
+          <Reviews />
         </Box>
       </Grid>
     </Grid>

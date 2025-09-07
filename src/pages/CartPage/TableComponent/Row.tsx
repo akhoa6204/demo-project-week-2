@@ -9,24 +9,23 @@ import type { IProduct } from "../../../interface/IProduct";
 import QtyBox from "../../../components/QtyBox";
 import { formatCurrency } from "../../../helpers/common";
 import { useMemo } from "react";
+import { useCartContext } from "../../../hooks/cart/useCartContext";
 
 const Row = ({
   id,
   qty,
   product,
-  handleChangeQuantity,
-  selectedItems,
-  handleToggleSelectedItems,
-  handleRemoveItems,
 }: {
   id: number;
   qty: number;
   product: IProduct;
-  handleChangeQuantity: (id: number, newQty: number) => void;
-  selectedItems: number[];
-  handleToggleSelectedItems: (id: number) => void;
-  handleRemoveItems: (ids: number[]) => void;
 }) => {
+  const {
+    handleChangeQuantity,
+    selectedItems,
+    handleToggleSelectedItems,
+    handleRemoveItems,
+  } = useCartContext();
   const discounted =
     product.discountPercentage && product.discountPercentage > 0;
   const finalPrice = useMemo(() => {

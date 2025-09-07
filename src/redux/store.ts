@@ -1,5 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import cartSlice from "./slice/cart.slice";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -11,17 +10,23 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-const rootReducer = combineReducers({
-  cart: cartSlice.reducer,
-});
+import type { PersistConfig } from "redux-persist";
+import { cartReducer } from "./reducers/cart.reducer";
 
-const persistConfig = {
+// 1) Tạo rootReducer và SUY RA RootState
+export const rootReducer = combineReducers({
+  cart: cartReducer,
+});
+export type RootState = ReturnType<typeof rootReducer>;
+
+// 2) Gõ generic cho persist config & persist reducer
+const persistConfig: PersistConfig<RootState> = {
   key: "root",
   storage,
   whitelist: ["cart"],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -32,7 +37,6 @@ export const store = configureStore({
       },
     }),
 });
-export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>;
+export const persistor = persistStore(store);
 export type AppDispatch = typeof store.dispatch;

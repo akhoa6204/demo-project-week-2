@@ -18,6 +18,7 @@ httpClient.interceptors.response.use(
 httpClient.interceptors.request.use(
   (req) => {
     console.log("Req sent:", req.url);
+
     return req;
   },
   (error) => {

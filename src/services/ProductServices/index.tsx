@@ -1,33 +1,22 @@
+// services/ProductServices.ts
+import type { AxiosRequestConfig } from "axios";
 import type { IParams } from "../../interface/IParams";
+import type { IProduct } from "../../interface/IProduct";
 import httpClient from "../httpClient";
 
-const ENDPOINT_API_PRODUCTS = "/products";
-const ENDPOINT_API_PRODUCTS_SEARCHING = "/products/search";
-export default class ProductServices {
-  static async getProducts(params?: IParams) {
-    let url = ENDPOINT_API_PRODUCTS;
+const PRODUCTS = "/products";
+const PRODUCTS_SEARCH = "/products/search";
 
-    if (params?.q) {
-      url = ENDPOINT_API_PRODUCTS_SEARCHING;
-    }
-    try {
-      const res = await httpClient.get(url, {
-        params,
-      });
-      return res;
-    } catch (err) {
-      console.error(err);
-      throw Error(err);
-    }
+type ListRes = { products: IProduct[]; total: number };
+
+export default class ProductServices {
+  static getProducts(params?: IParams, config?: AxiosRequestConfig) {
+    const url = params?.q ? PRODUCTS_SEARCH : PRODUCTS;
+    return httpClient.get<ListRes, ListRes>(url, { params, ...config });
   }
-  static async getProduct(id: string) {
-    const url = `${ENDPOINT_API_PRODUCTS}/${id}`;
-    try {
-      const res = await httpClient.get(url);
-      return res;
-    } catch (err) {
-      console.error(err);
-      throw Error(err);
-    }
+
+  static getProduct(id: string | number, config?: AxiosRequestConfig) {
+    const url = `${PRODUCTS}/${id}`;
+    return httpClient.get<IProduct, IProduct>(url, config);
   }
 }

@@ -1,25 +1,13 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import TableComponent from "./TableComponent";
-import useCartPage from "../../hooks/cart/useCartPage";
 import EmptyCart from "./EmptyCart";
 import OrderSummary from "./OrderSummary";
 import BottomCheckoutBar from "./BottomCheckoutBar";
 import CartPageSkeleton from "./Skeleton";
+import { useCartContext } from "../../hooks/cart/useCartContext";
 
 const CartPage = () => {
-  const {
-    cart,
-    handleChangeQuantity,
-    handleRemoveItems,
-    handleToggleSelectedItems,
-    handleToggleAllSelectedItems,
-    handleBackToHome,
-    selectedItems,
-    originalTotal,
-    discountTotal,
-    finalTotal,
-    isLoading,
-  } = useCartPage();
+  const { isLoading, cart } = useCartContext();
   if (isLoading) return <CartPageSkeleton />;
   return (
     <Container sx={{ py: 3 }}>
@@ -30,14 +18,7 @@ const CartPage = () => {
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 9 }}>
-              <TableComponent
-                cart={cart}
-                selectedItems={selectedItems}
-                handleChangeQuantity={handleChangeQuantity}
-                handleRemoveItems={handleRemoveItems}
-                handleToggleAllSelectedItems={handleToggleAllSelectedItems}
-                handleToggleSelectedItems={handleToggleSelectedItems}
-              />
+              <TableComponent />
             </Grid>
             <Grid
               size={{ xs: 12, md: 3 }}
@@ -47,12 +28,7 @@ const CartPage = () => {
               }}
             >
               <Box sx={{ position: "sticky", top: "10%" }}>
-                <OrderSummary
-                  originalTotal={originalTotal}
-                  discountTotal={discountTotal}
-                  finalTotal={finalTotal}
-                  selectedItems={selectedItems}
-                />
+                <OrderSummary />
               </Box>
             </Grid>
           </Grid>
@@ -63,18 +39,11 @@ const CartPage = () => {
             right={0}
             sx={{ bgcolor: "white", px: 2, py: 1, display: { md: "none" } }}
           >
-            <BottomCheckoutBar
-              originalTotal={originalTotal}
-              finalTotal={finalTotal}
-              selectedItems={selectedItems}
-              cart={cart}
-              handleRemoveItems={handleRemoveItems}
-              handleToggleAllSelectedItems={handleToggleAllSelectedItems}
-            />
+            <BottomCheckoutBar />
           </Box>
         </Box>
       ) : (
-        <EmptyCart onContinue={handleBackToHome} />
+        <EmptyCart />
       )}
     </Container>
   );

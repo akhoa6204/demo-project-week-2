@@ -1,39 +1,31 @@
 import { Button, Rating, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
-import type { IProduct } from "../../../interface/IProduct";
 import { formatCurrency } from "../../../helpers/common";
 import QtyBox from "../../../components/QtyBox";
+import { useProductDetailContext } from "../../../hooks/product-detail/useProductDetailContext";
 
-const InfoPanel = ({
-  product,
-  quantity = 1,
-  handleChangeQuantity,
-  handleAddToCart,
-}: {
-  product: IProduct;
-  quantity: number;
-  handleChangeQuantity: (id: number, newQty: number) => void;
-  handleAddToCart: () => void;
-}) => {
-  const discounted =
-    product.discountPercentage && product.discountPercentage > 0;
+const InfoPanel = () => {
+  const { product, quantity, handleChangeQuantity, handleAddToCart } =
+    useProductDetailContext();
+  const { id, discountPercentage, price, title, brand, sku, rating } = product!;
+  const discounted = discountPercentage && discountPercentage > 0;
   const finalPrice = useMemo(() => {
-    if (!discounted) return product.price;
-    return Math.round(product.price * (1 - product.discountPercentage / 100));
-  }, [product.price, product.discountPercentage, discounted]);
+    if (!discounted) return price;
+    return Math.round(price * (1 - discountPercentage / 100));
+  }, [price, discountPercentage, discounted]);
 
   return (
     <Stack spacing={2}>
       <Stack spacing={1}>
-        <Typography variant="h4">{product.title}</Typography>
+        <Typography variant="h4">{title}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
-          {product.brand} • SKU: {product.sku}
+          {brand} • SKU: {sku}
         </Typography>
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="body2" sx={{ textDecoration: "underline" }}>
-            {product.rating?.toFixed?.(1) ?? product.rating}
+            {rating?.toFixed?.(1) ?? rating}
           </Typography>
-          <Rating value={product.rating} precision={0.1} readOnly />
+          <Rating value={rating} precision={0.1} readOnly />
         </Stack>
       </Stack>
 
@@ -48,7 +40,7 @@ const InfoPanel = ({
               color="text.secondary"
               sx={{ textDecoration: "line-through" }}
             >
-              {formatCurrency(product.price, "USD", "en-EN")}
+              {formatCurrency(price, "USD", "en-EN")}
             </Typography>
           </>
         )}
@@ -56,7 +48,7 @@ const InfoPanel = ({
       <QtyBox
         quantity={quantity}
         handleChangeQuantity={handleChangeQuantity}
-        id={product.id}
+        id={id}
       />
       <Stack direction="row" spacing={2}>
         <Button variant="contained" onClick={handleAddToCart}>

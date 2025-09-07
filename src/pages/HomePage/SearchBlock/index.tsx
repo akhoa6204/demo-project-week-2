@@ -1,15 +1,13 @@
 import { Button, Stack, TextField } from "@mui/material";
-import type { ChangeEvent, FormEvent } from "react";
-interface Props {
-  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  keyword: string;
-  handleChangeSearch: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-const SearchBlock: React.FC<Props> = ({
-  handleSubmit,
-  keyword,
-  handleChangeSearch,
-}) => {
+import useHomeContext from "../../../hooks/home/useHomeContext";
+
+const SearchBlock = () => {
+  const {
+    keyword,
+    handleSubmit,
+    handleChangeSearch,
+  } = useHomeContext();
+  
   return (
     <Stack
       component={"form"}

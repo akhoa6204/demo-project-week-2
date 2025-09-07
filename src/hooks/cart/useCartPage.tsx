@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { removeItemsCart, updateQty } from "../../redux/slice/cart.slice";
 import { useAppDispatch, useAppSelector } from "../useRedux";
 import { useNavigate } from "react-router-dom";
+import { removeItemsCart, updateQty } from "../../redux/actions/cart.action";
 
 const useCartPage = () => {
   const dispatch = useAppDispatch();
@@ -79,7 +79,7 @@ const useCartPage = () => {
     originalTotal,
     discountTotal,
     finalTotal,
-    isLoading
+    isLoading,
   };
 };
 export default useCartPage;

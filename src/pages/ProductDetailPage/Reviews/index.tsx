@@ -1,8 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 import Review from "./Review";
 import type { IReview } from "../../../interface/IProduct";
+import { useProductDetailContext } from "../../../hooks/product-detail/useProductDetailContext";
 
-const Reviews = ({ reviews }: { reviews: IReview[] }) => {
+const Reviews = () => {
+  const { product } = useProductDetailContext();
+  const { reviews } = product!;
   if (!reviews?.length)
     return (
       <Typography variant="body2" color="text.secondary">

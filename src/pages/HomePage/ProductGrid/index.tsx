@@ -1,22 +1,12 @@
 import { Box, Grid, Typography } from "@mui/material";
 import ProductCard from "../../../components/ProductCard";
 import type { IProduct } from "../../../interface/IProduct";
-import ProductCardSkeleton from "../../../components/ProductCardSkeleton";
 import ProductGridSkeleton from "./ProductGridSkeleton";
-interface Props {
-  isLoading: boolean;
-  skeletonCount: number;
-  products: IProduct[];
-  isEmpty: boolean;
-  handleAddToCart: (product: IProduct) => void;
-}
-const ProductGrid: React.FC<Props> = ({
-  isLoading,
-  isEmpty,
-  skeletonCount,
-  products,
-  handleAddToCart,
-}) => {
+import useHomeContext from "../../../hooks/home/useHomeContext";
+
+const ProductGrid = () => {
+  const { isLoading, isEmpty, skeletonCount, handleAddToCart, products } =
+    useHomeContext();
   return (
     <Grid container spacing={2}>
       {isLoading ? <ProductGridSkeleton skeletonCount={skeletonCount} /> : ""}

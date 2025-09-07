@@ -1,17 +1,10 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import { formatCurrency } from "../../helpers/common";
+import { useCartContext } from "../../hooks/cart/useCartContext";
 
-const OrderSummary = ({
-  selectedItems,
-  originalTotal,
-  discountTotal,
-  finalTotal,
-}: {
-  selectedItems: number[];
-  originalTotal: number;
-  discountTotal: number;
-  finalTotal: number;
-}) => {
+const OrderSummary = () => {
+  const { selectedItems, originalTotal, discountTotal, finalTotal } =
+    useCartContext();
   return (
     <Box
       sx={{
